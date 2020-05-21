@@ -108,7 +108,7 @@ def train_model():
     print('Test accuracy:', test_scores[1])    
     mymodel.save('age_model.h5')
 
-def deploy(file_name):
+def deploy_age(file_name):
     mymodel = model()
     mymodel.load_weights('./age_model.h5')
     #mymodel = keras.models.load_model('./age_model.h5')
@@ -130,8 +130,7 @@ if __name__ == "__main__":
     '''
     train_model()
     '''
-    deploy('./zh-CN/clips/common_voice_zh-CN_18531536.mp3') # male    teens
-    deploy('./zh-CN/clips/common_voice_zh-CN_19792544.mp3') # male    twenties
-    deploy('./zh-CN/clips/common_voice_zh-CN_19703883.mp3') # female    thirties
-    deploy('./common_voice_zh-HK_20143982.mp3')
+    deploy_age('./zh-CN/clips/common_voice_zh-CN_18531536.mp3') # male    teens
+    deploy_age('./zh-CN/clips/common_voice_zh-CN_19792544.mp3') # male    twenties
+    deploy_age('./zh-CN/clips/common_voice_zh-CN_19703883.mp3') # female    thirties
     

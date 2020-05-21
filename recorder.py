@@ -1,13 +1,17 @@
+import os
 import wave
 from pyaudio import PyAudio, paInt16
-from voicemodel_gender import deploy
+from voicemodel_gender import deploy_gender
+from voicemodel_age import deploy_age
+import librosa
+import soundfile as sf
 
-framerate=16000
 NUM_SAMPLES=2000
-channels=1
-sampwidth=2
+framerate=16000    #采样频率
+channels=1    #声道数量（1 为单声道，2 为立体声）
+sampwidth=2    #采样字节长度
 TIME=10
-filename = '001.mp3'
+filename = 'tmp.wav'
 
 def save_wave_file(filename,data):
     '''save the data to the wavfile'''
@@ -17,7 +21,8 @@ def save_wave_file(filename,data):
     wf.setframerate(framerate)
     wf.writeframes(b"".join(data))
     wf.close()
-    
+
+#录音(10s左右)   
 def my_record():
     pa=PyAudio()
     stream=pa.open(format = paInt16,channels=1,
@@ -35,6 +40,7 @@ def my_record():
     save_wave_file(filename,my_buf)
     stream.close()
 
+#播放录音，并分辨性别年龄
 chunk=1024
 def play():
     wf=wave.open(filename,'rb')
@@ -53,11 +59,25 @@ def play():
     p.terminate()
     
     # gender classifier
-    if deploy(filename) == 1:
+    if deploy_gender(filename) == 1:
         print('You are man')
     else:
         print('You are woman')
         
+    # age classifier
+    age_list = ['teens','twenties','thirties','fourties']
+    age = deploy_age(filename)
+    print('Your age:',age_list[age])
+
+def main():
+    if os.path.exists('demo.mp3'):
+        # wave不支持64位RIFF文件,故用librosa读取文件，再将其写回到临时的wav文件中
+        x,_ = librosa.load('demo.mp3', sr=16000)
+        sf.write('tmp.wav', x, 16000)  
+        play()
+    else:
+        my_record()
+        play()
+     
 if __name__ == '__main__':
-    #my_record()
-    play()
+    main()

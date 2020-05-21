@@ -132,4 +132,5 @@ dmypy.json
 zh-CN/
 !zh-CN/train.tsv
 zh-CN.tar.gz
-
+*.mp3
+*.wav
