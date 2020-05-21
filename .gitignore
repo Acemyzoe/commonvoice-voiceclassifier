@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#commonvoice-voiceclassifier
+zh-CN/
+!zh-CN/train.tsv
+zh-CN.tar.gz
+
